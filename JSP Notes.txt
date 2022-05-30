@@ -1,0 +1,748 @@
+Java Server Page (JSP) Notes
+
+
+////////////////////////////// java Basics ///////////////////////////
+
+// single line comments 
+/* Multiline comments
+*/
+
+String s="My name is umar";//declaring a variable s with value
+int a=10;// declaring a variable
+System.out.println(s);//show the value of s 
+System.out.println(a);//show the value of a
+
+/* if else structure
+if(condition)
+{
+
+
+}
+
+*/
+/* switch statement structure
+switch(expresion/variable)
+{
+case 1:
+break;
+case 2:
+break;
+case 3:
+break;
+default:
+break;
+}
+
+*/
+
+
+//loops : These structures are used for iteration/repitition
+
+//1. while loop: 3 stages
+int i=1;//initializing the loop
+while(i<10)//terminate condition
+{
+i++;//increament loop
+}
+//2. Do while loop: 3 stages
+int i=1;//initializing the loop
+do
+{
+i++;//increament loop
+}while(i<10);//terminate condition
+3. for loop
+for(int i=1;i<10;)
+{
+
+}
+4. foreach loop: special loop to iterate with array
+
+char[] vowels = {'a', 'e', 'i', 'o', 'u'};
+  
+   // iterating through an array using the for-each loop
+   for (char item: vowels) 
+   {
+     System.out.println(item);
+   }
+/////////////////////////////////////////
+Array: a collection of elements which has same data type is called an array
+
+char[] vowels = {'a', 'e', 'i', 'o', 'u'};
+String[] cars = {"Volvo", "BMW", "Ford", "Mazda"};
+//accessing array with loop
+
+for (int i = 0; i < cars.length; i++) {
+  System.out.println(cars[i]);
+}
+
+Function or Method:
+A function or method is responsible to do a specific task.A method is a block of code which only runs when it is called
+
+  int add(int a,int b) {
+  int result=a+b;
+   return result;
+  }
+
+
+static void myMethod() {
+    System.out.println("I just got executed!");
+  }
+
+//////////////////////////////
+Class:
+A structure which consists of some commom attributes and behaviours.
+ The basic propuse of OOP is Reusability
+ 
+ 
+ example:
+ class Student
+ {
+ //define fields
+ private String name;
+ private int rollnumber;
+ //define setter methods
+ public void setName(String n){this.name=n;}
+ public void setRollNo(int r){this.rollnumber=r;}
+ //define getter methods
+ public String  getName(){return this.name;}
+ public int getRollNo(){return this.rollnumber;}
+ 
+ public String Eat(){return "Studnet is eating";}
+ public static String study(){return "Studnet is studying";}
+ 
+ }//end of class
+ 
+//acessing class in java console 
+public class Main 
+{
+  public static void main(String[] args) 
+  {
+    Student object;//declaring object
+	
+	object.setName("Umar");
+	object.setRollNo(1);
+	
+  }
+}
+//////////////////////////////end of Basics///////////////////////////////////
+
+How to insert data into table using jsp and mysql
+step 1: create feedback table with these filed
+`customerID`, `Message`, `date1`
+step2:create front end
+
+<form name="myForm" method="post" action="customerfeedbackProcess.jsp">
+<table>
+
+<tr><td>Enter customer name </td><td> <input type="text"  size="100" name="customerID" Required></td></tr>
+
+
+<tr><td>Enter you message</td><td> <input type="text"  size="100" name="message" Required></td></tr>
+<tr><td></td><td> </td></tr>
+<tr><td> </td><td> <input  type="submit" value="send Message" name="send"></td></tr>
+
+</table>
+</form>
+</div>
+
+</body>
+</html>
+
+
+step 3:create this page with code customerfeedbackProcess.jsp
+
+String customerID=request.getParameter("customerID");
+String message=request.getParameter("message");
+
+ Class.forName("com.mysql.jdbc.Driver");
+Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "");
+Statement st=conn.createStatement();
+            
+
+DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+   LocalDateTime now = LocalDateTime.now();
+	   
+	String dates= now.toString();//get current date and time
+             
+
+			
+int i=st.executeUpdate("INSERT INTO `feedback`( `customerID`, `Message`, `date1`) VALUES ('"+customerID+"','"+message+"','"+dates+"')");
+out.println("thanks for your feedback!");
+
+//////////////////////////////////////////////////////////////////////////////
+
+
+How to show data using jsp:
+              <%  jsp code here
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "");
+                Statement st = con.createStatement();
+                String sql = "SELECT * FROM feedback";
+                ResultSet rs = st.executeQuery(sql);
+                while (rs.next()) {
+					
+					
+                    String customerID= rs.getString("customerID");
+                    String Message= rs.getString("Message");
+                    String date1= rs.getString("date1");
+                    
+				
+        %>
+		
+		<div >
+		<div>
+		<h3>Customer  <%=customerID%></h3>
+		<h3>Message <%=Message%></h3>
+		
+		<h3>Date <%=date1%></h3>
+		
+		
+		
+		</div>
+		</div>
+		
+		
+		
+		
+        <%
+               }
+            } 
+			catch (Exception e) 
+			{
+                out.println(e);
+            }
+        %>
+
+
+
+////////////////////////////////////////////////////////////////////////////
+how to insert image using java
+step 1 : create books table with following fileds
+
+`books`(`title`, `author`, `generation`, `pages`,`edition`, `copyrights`, `publishers`,`publishDate`, `path`, `category`, `filename`, `price`)
+
+step2:create interface "addBooks.jsp"
+
+<%@page import="java.util.Set"%>
+<%@page import="java.util.HashSet"%>
+<%@page import="java.util.Random"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Add Books</title>
+		<link rel="stylesheet" href="css/style1.css">
+    </head>
+    <body>
+
+	 <h1>Add Books</h1>
+	 <div style="margin-top:10px; padding:10px">
+        <form action="AddBooksServlet" method="post" enctype="multipart/form-data">
+            <table width="400px" align="center" border=2>
+                <tr>
+				
+				
+				
+				
+                    <td align="center" colspan="2">Add book Details</td>
+                </tr>
+                <tr>
+                    <td>Title </td>
+                    <td><input type="text" name="title" /></td>
+                </tr>
+                <tr>
+                    <td>Author </td>
+                    <td>
+                        <input type="text" name="author">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Generation </td>
+                    <td>
+                        <input type="text" name="generation">
+                    </td>
+                </tr>
+
+				<tr>
+                    <td>Pages </td>
+                    <td><input type="number" name="pages" /></td>
+                </tr>
+				<tr>
+                    <td>Price </td>
+                    <td><input type="number" name="price" /></td>
+                </tr>
+                <tr>
+                    <td>Edition </td>
+                    <td>
+                        <input type="text" name="edition">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Copyrights </td>
+                    <td>
+                        <input type="text" name="copyrights">
+                    </td>
+                </tr>
+				
+				<tr>
+                    <td>Publishers</td>
+                    <td>
+                        <input type="text" name="publishers">
+                    </td>
+                </tr>
+				
+				
+				
+				
+				
+                <tr>
+                    <td>Image Link: </td>
+                    <td>
+                        <input type="file" name="file">
+                    </td>
+                </tr>
+                <tr>
+				<tr>
+                    <td>category </td>
+                    <td>
+                        <input type="text" name="category">
+                    </td>
+                </tr>
+				
+                    <td></td>
+                    <td><input class="btn btn-success" type="submit" value="Submit"></td>
+                </tr>
+            </table>
+
+        </form><br>
+</div>
+</body>
+</html>
+
+
+Step3: create servlet "AddBooksServlet"
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime; 
+
+@WebServlet("/AddBooksServlet")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10, // 10MB
+        maxRequestSize = 1024 * 1024 * 50)
+
+public class AddBooksServlet extends HttpServlet {
+    
+
+    public static final String UPLOAD_DIR = "images";
+    public String dbFileName = "";
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+	   
+	   
+	   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+   LocalDateTime now = LocalDateTime.now();
+	   
+	String dates= now.toString();
+	   
+        String title = request.getParameter("title");
+        String author = request.getParameter("author");
+		
+		 String generation = request.getParameter("generation");
+        String pages = request.getParameter("pages");
+		
+		 String edition = request.getParameter("edition");
+        String copyrights = request.getParameter("copyrights");
+		
+		 String publishers = request.getParameter("publishers");
+        String category = request.getParameter("category");//price
+		
+String price = request.getParameter("price");//price
+        Part part = request.getPart("file");//
+        String fileName = extractFileName(part);//file name
+
+        /**
+         * *** Get The Absolute Path Of The Web Application ****
+         */
+        String applicationPath = getServletContext().getRealPath("");
+        String uploadPath = applicationPath + File.separator + UPLOAD_DIR;
+        System.out.println("applicationPath:" + applicationPath);
+        File fileUploadDirectory = new File(uploadPath);
+        if (!fileUploadDirectory.exists()) {
+            fileUploadDirectory.mkdirs();
+        }
+        String savePath = uploadPath + File.separator + fileName;
+        System.out.println("savePath: " + savePath);
+        String sRootPath = new File(savePath).getAbsolutePath();
+        System.out.println("sRootPath: " + sRootPath);
+        part.write(savePath + File.separator);
+        File fileSaveDir1 = new File(savePath);
+        dbFileName = UPLOAD_DIR + File.separator + fileName;
+        part.write(savePath + File.separator);
+        
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/brsfinal", "root", "");
+            PreparedStatement pst = con.prepareStatement("INSERT INTO `books`(`title`, `author`, `generation`, `pages`,`edition`, `copyrights`, `publishers`,`publishDate`, `path`, `category`, `filename`, `price`)  values(?,?,?,?,?,?,?,?,?,?,?,?)");
+            
+			pst.setString(1, title);
+            pst.setString(2, author);
+            pst.setString(3, generation);
+            pst.setString(4, pages);
+            pst.setString(5, edition);
+			pst.setString(6, copyrights);
+            pst.setString(7, publishers);//now
+			pst.setString(8, dates);
+            pst.setString(9, savePath);
+            pst.setString(10, category);
+			pst.setString(11,dbFileName);
+			pst.setString(12,price);
+           
+            
+            pst.executeUpdate();//inserting data into table
+            out.println("<center><h1>Books are added Succesfully......</h1></center>");
+           out.println("<center><a href='AdminPannel.jsp'>Back to Home </a></center>");
+        } catch (Exception e) {
+            out.println(e);
+        }
+
+    }
+    // file name of the upload file is included in content-disposition header like this:
+    //form-data; name="dataFile"; filename="PHOTO.JPG"
+
+    private String extractFileName(Part part) 
+	{//This method will print the file name.
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) 
+		{
+            if (s.trim().startsWith("filename")) {
+                return s.substring(s.indexOf("=") + 2, s.length() - 1);
+            }
+        }
+        return "";
+    }
+	
+}
+////////////////////////////////////////////////////////////////////////
+
+How to show data with image using jsp
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+	 
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Admin Pannel</title>
+		<link rel="stylesheet" href="css/style1.css">
+    </head>
+	
+	
+    <body>	<h1>Book List</h1>
+	<hr>
+        <%
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/brsfinal", "root", "");
+                Statement st = con.createStatement();
+                String sql = "SELECT * FROM books";
+                ResultSet rs = st.executeQuery(sql);
+                while (rs.next()) {
+					//bookid,title,author
+                    int bookid = rs.getInt("bookid");
+					
+                    String title = rs.getString("title");
+                    String author = rs.getString("author");
+                    String filename = rs.getString("filename");
+                    String path = rs.getString("path");
+				
+        %>
+		
+		<div style="float: left; padding: 10px; border=1 ; border-style: solid; border-color: coral;">
+		<div>
+		<h3>ID: <%=bookid%></h3>
+		<h3>Title: <%=title%></h3>
+		
+		<h3>Author: <%=author%></h3>
+		
+		<h3><image src="<%=filename%>" width="150" height="200"/></h3>
+		
+			
+		
+		<a href="updateBook.jsp?id=<%=rs.getInt("bookid")%>">Update</a>
+<a href="deleteBook.jsp?id=<%=rs.getInt("bookid")%>">Delete</a>
+		
+		</div>
+		</div>
+		
+		
+		
+		
+        <%
+               }
+            } 
+			catch (Exception e) 
+			{
+                out.println(e);
+            }
+        %>
+    </body>
+</html>
+
+////////////////////////////////////
+How to delete book by id
+<%
+String id=request.getParameter("id");
+try
+{
+Class.forName("com.mysql.jdbc.Driver");
+Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/brsfinal", "root", "");
+Statement st=conn.createStatement();
+int i=st.executeUpdate("DELETE FROM `books` WHERE bookid='"+id+"'");
+out.println("Data Deleted Successfully!");
+}
+catch(Exception e)
+{
+System.out.print(e);
+e.printStackTrace();
+}
+%>
+
+///////////////////////////////////
+how to edit book by id
+step 1: get book by id and display on nterface
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<html>
+ <title>Book Recommendation System</title>
+
+<body>
+
+
+<br>
+<div class="container">
+      <section id="main">
+	 
+
+
+<%
+String id = request.getParameter("id");
+String driver = "com.mysql.jdbc.Driver";
+String connectionUrl = "jdbc:mysql://localhost:3306/";
+String database = "brsfinal";
+String userid = "root";
+String password = "";
+try {
+Class.forName(driver);
+} catch (ClassNotFoundException e) {
+e.printStackTrace();
+}
+Connection connection = null;
+Statement statement = null;
+ResultSet resultSet = null;
+
+%>
+<%
+try{
+connection = DriverManager.getConnection(connectionUrl+database, userid, password);
+statement=connection.createStatement();
+String sql ="select * from `books` where bookid='"+id+"'";
+resultSet = statement.executeQuery(sql);
+while(resultSet.next()){
+	
+	//bookid,title,author
+%>
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Update Book details</h1>
+<form method="post" action="update-processBook.jsp">
+<input type="hidden" name="id" value="<%=resultSet.getString("bookid") %>">
+<h3>
+Book ID: <%=resultSet.getString("bookid") %></h3>
+<br>
+Book Title:<br>
+<input type="text" name="title" value="<%=resultSet.getString("title") %>">
+<br>
+Author Name :<br>
+<input type="text" name="author" value="<%=resultSet.getString("author") %>">
+<br>
+Price :<br>
+<input type="text" name="price" value="<%=resultSet.getString("price") %>">
+<br><br>
+<input type="submit"  class="btn btn-info" value="Save Changes">
+</form>
+<%
+}
+connection.close();
+} catch (Exception e) {
+e.printStackTrace();
+}
+%>
+
+
+</section>
+</div>
+
+</body>
+</html>
+
+
+Step2:update book details "update-processBook.jsp"
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page import="java.sql.*" %>
+<%! String driverName = "com.mysql.jdbc.Driver";%>
+<%!String url = "jdbc:mysql://localhost:3306/brsfinal";%>
+<%!String user = "root";%>
+<%!String psw = "";%>
+<html>
+ <title>Book Recommendation System</title>
+    <link rel="stylesheet" href="css/style1.css">
+<body>
+
+<header id="main-header">
+      <div class="container">
+        <h1>Book Recommendation System  
+		</h1>
+      </div>
+    </header>
+	<br>
+<div class="container">
+      <section id="main">
+	 
+
+<%
+//bookid,title,author
+String bookid = request.getParameter("id");
+String title=request.getParameter("title");
+String author=request.getParameter("author");
+
+String price=request.getParameter("price");
+
+
+
+if(bookid != null)
+{
+Connection con = null;
+PreparedStatement ps = null;
+//int personID = Integer.parseInt(id);
+try
+{
+Class.forName(driverName);
+con = DriverManager.getConnection(url,user,psw);
+
+String sql="Update `books` set bookid=?,title=?,author=?,price=? where bookid='"+bookid+"'";
+ps = con.prepareStatement(sql);
+ps.setString(1,bookid);
+ps.setString(2, title);
+ps.setString(3, author);
+ps.setString(4, price);
+
+int i = ps.executeUpdate();//update book by bookid
+if(i > 0)
+{
+out.print("Record Updated Successfully");
+}
+else
+{
+out.print("There is a problem in updating Record.");
+}
+}
+catch(SQLException sql)
+{
+request.setAttribute("error", sql);
+out.println(sql);
+}
+}
+%>
+
+
+</section>
+</div>
+
+</body>
+</html>
+////////////////////////////////////////
+How to count books
+
+try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/brsfinal", "root", "");
+                Statement st = con.createStatement();
+                String sql = "select count(*) from books  ";
+                ResultSet rs = st.executeQuery(sql);
+                while (rs.next()) {
+					 TotalBooks = rs.getString(1);
+				 }
+            } 
+			catch (Exception e) 
+			{
+                out.println(e);
+            }
+			
+			
+			
+			<h3>Total Books <%=TotalBooks%></h3>
+		
+////////////////////////////////////////		
+
+how to show data in drop down from database
+in this tutorial i am going to get category from table and bind on drop down
+
+<select name="category">
+
+    <option >
+       Select
+    </option>
+	<%
+	   
+	   try
+	   {
+		  
+		   Class.forName("com.mysql.jdbc.Driver");
+                Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/brsfinal", "root", "");
+                Statement st1 = con1.createStatement();
+               String query="SELECT DISTINCT category FROM `books`";
+                ResultSet rs1 = st1.executeQuery(query);
+                while (rs1.next()) 
+				{%>
+			 <option > <%=rs1.getString("category")%></option >
+			
+				<%}
+	   }
+	   catch(Exception e)
+	   {
+		   
+	   }
+	   
+	   %>
+  
+</select>
+
+
